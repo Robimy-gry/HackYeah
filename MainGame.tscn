@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://MainGame.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/snek.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Graphics/Powerups/powerup_life.png" type="Texture" id=5]
 [ext_resource path="res://Graphics/Powerups/powerup_fast.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Powerups/powerup_teleport.png" type="Texture" id=7]
+[ext_resource path="res://Creatures/Player.tscn" type="PackedScene" id=8]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
@@ -170,5 +171,7 @@ autostart = true
 [node name="PowerupTimer" type="Timer" parent="."]
 wait_time = 4.0
 one_shot = true
+
+[node name="Player" parent="." instance=ExtResource( 8 )]
 [connection signal="timeout" from="PlayerMovementTimer" to="." method="_on_PlayerMovementTimer_timeout"]
 [connection signal="timeout" from="PowerupTimer" to="." method="_on_PowerupTimer_timeout"]

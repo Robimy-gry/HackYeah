@@ -79,6 +79,8 @@ func move_player():
 		new_head = teleport_pos
 		teleport = false
 	body_copy.insert(0, new_head)
+	$Player.position = Vector2(16+(32*new_head.x), 16+(32*new_head.y))
+	print($Player.position)
 	player_body = body_copy
 
 
