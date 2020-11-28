@@ -5,13 +5,10 @@ const BORDER = 1
 const POWERUP = 2
 const MAP_WIDTH = 25
 const MAP_HEIGHT = 20
-const POWERUP_TYPES = ["LIFE", "SPEED_UP", "SPEED_DOWN", "TELEPORT"]
-var borders = [
-	Vector2(4,10), Vector2(5,10), Vector2(6,10), 
-	Vector2(4,11), Vector2(4,12), Vector2(3,12), 
-	Vector2(2,12), Vector2(1,12), Vector2(0,12)]
+const POWERUP_TYPES = ["SPEED_UP", "LIFE", "TELEPORT", "SPEED_DOWN"]
+var borders = []
 var powerup
-var player_body = [Vector2(4,5), Vector2(3,5), Vector2(2,5)]
+var player_body = []
 var player_direction = Vector2(1,0)
 var add_life = false
 var teleport = false
@@ -19,11 +16,16 @@ var teleport_pos
 
 
 func _ready():
+	get_start_positions()
 	powerup = place_powerup()
 	draw_powerup()
 	draw_player()
 	draw_borders()
 
+
+func get_start_positions():
+	player_body = $Elements.get_used_cells_by_id(0)
+	borders =$Elements.get_used_cells_by_id(1)
 
 func place_powerup():
 	var valid_point = false
@@ -37,6 +39,7 @@ func place_powerup():
 		if $Elements.get_cell(x,y) == -1:
 			powerup["position"] = Vector2(x,y)
 			powerup["type"] = randi() % len(POWERUP_TYPES)
+			powerup["tile"] = powerup["type"] + 2
 			print(POWERUP_TYPES[powerup["type"]], ": position = ({x}, {y})".format({"x": x, "y": y}))
 			valid_point = true
 	return powerup
@@ -47,7 +50,7 @@ func draw_borders():
 		$Elements.set_cell(border.x, border.y, BORDER)
 
 func draw_powerup():
-	$Elements.set_cell(powerup["position"].x, powerup["position"].y, POWERUP)
+	$Elements.set_cell(powerup["position"].x, powerup["position"].y, powerup["tile"])
 
 func draw_player():
 	for block in player_body:
