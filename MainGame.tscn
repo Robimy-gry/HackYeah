@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://MainGame.gd" type="Script" id=1]
 [ext_resource path="res://Graphics/snek.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Graphics/Powerups/powerup_fast.png" type="Texture" id=6]
 [ext_resource path="res://Graphics/Powerups/powerup_teleport.png" type="Texture" id=7]
 [ext_resource path="res://Creatures/Player.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Enemy.tscn" type="PackedScene" id=9]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
@@ -162,7 +163,7 @@ script = ExtResource( 1 )
 tile_set = SubResource( 7 )
 cell_size = Vector2( 32, 32 )
 format = 1
-tile_data = PoolIntArray( 18, 1, 0, 65554, 1, 0, 131090, 1, 0, 196626, 1, 0, 262161, 1, 0, 262162, 1, 0, 327696, 1, 0, 327697, 1, 0, 393232, 1, 0, 458767, 1, 0, 458768, 1, 0, 524302, 1, 0, 524303, 1, 0, 589838, 1, 0, 655374, 1, 0, 720910, 1, 0, 786444, 1, 0, 786445, 1, 0, 786446, 1, 0, 851979, 1, 0, 851980, 1, 0, 917514, 1, 0, 917515, 1, 0, 983050, 1, 0, 1048586, 1, 0, 1114122, 1, 0, 1179658, 1, 0, 1245184, 0, 0, 1245185, 0, 0, 1245186, 0, 0, 1245194, 1, 0 )
+tile_data = PoolIntArray( 18, 1, 0, 65554, 1, 0, 131090, 1, 0, 196626, 1, 0, 262161, 1, 0, 262162, 1, 0, 327696, 1, 0, 327697, 1, 0, 393232, 1, 0, 458767, 1, 0, 458768, 1, 0, 524302, 1, 0, 524303, 1, 0, 589838, 1, 0, 655374, 1, 0, 720910, 1, 0, 786444, 1, 0, 786445, 1, 0, 786446, 1, 0, 851979, 1, 0, 851980, 1, 0, 917514, 1, 0, 917515, 1, 0, 983050, 1, 0, 1048586, 1, 0, 1114122, 1, 0, 1179658, 1, 0, 1310717, 0, 0, 1310718, 0, 0, 1310719, 0, 0, 1245194, 1, 0 )
 
 [node name="PlayerMovementTimer" type="Timer" parent="."]
 wait_time = 0.2
@@ -173,5 +174,7 @@ wait_time = 4.0
 one_shot = true
 
 [node name="Player" parent="." instance=ExtResource( 8 )]
+
+[node name="Enemy" parent="." instance=ExtResource( 9 )]
 [connection signal="timeout" from="PlayerMovementTimer" to="." method="_on_PlayerMovementTimer_timeout"]
 [connection signal="timeout" from="PowerupTimer" to="." method="_on_PowerupTimer_timeout"]
