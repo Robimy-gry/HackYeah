@@ -107,6 +107,7 @@ func activate_powerup(powerup):
 		add_life = true
 	elif POWERUP_TYPES[powerup["type"]] in ["SPEED_UP", "SPEED_DOWN"]:
 		$PowerupTimer.stop()
+		$PowerupTimer.stop()
 		if POWERUP_TYPES[powerup["type"]] == "SPEED_UP":
 			$PlayerMovementTimer.wait_time = 0.1
 		if POWERUP_TYPES[powerup["type"]] == "SPEED_DOWN":
