@@ -37,7 +37,7 @@ func place_powerup():
 		if $Elements.get_cell(x,y) == -1:
 			powerup["position"] = Vector2(x,y)
 			powerup["type"] = randi() % len(POWERUP_TYPES)
-			print(POWERUP_TYPES[powerup["type"]])
+			print(POWERUP_TYPES[powerup["type"]], ": position = ({x}, {y})".format({"x": x, "y": y}))
 			valid_point = true
 	return powerup
 
