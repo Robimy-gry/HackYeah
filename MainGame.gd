@@ -2,17 +2,20 @@ extends Node2D
 
 const PLAYER = 0
 const BORDER = 1
-const POWERUP = 2
 const MAP_WIDTH = 25
 const MAP_HEIGHT = 20
 const POWERUP_TYPES = ["SPEED_UP", "LIFE", "TELEPORT", "SPEED_DOWN"]
 var borders = []
 var powerup
 var player_body = []
-var player_direction = Vector2(1,0)
-var add_life = false
+var start_player_direction = Vector2(1,0)
+var player_direction = start_player_direction
 var teleport = false
 var teleport_pos
+var border_eaten
+var player_lives = 3
+var start_player_position = []
+var game_over = false
 
 
 func _ready():
@@ -24,7 +27,9 @@ func _ready():
 
 
 func get_start_positions():
-	player_body = $Elements.get_used_cells_by_id(0)
+	for element in $Elements.get_used_cells_by_id(0):
+		start_player_position.push_front(element)
+	player_body = start_player_position
 	borders =$Elements.get_used_cells_by_id(1)
 
 func place_powerup():
@@ -38,7 +43,7 @@ func place_powerup():
 		y = randi() % MAP_HEIGHT
 		if $Elements.get_cell(x,y) == -1:
 			powerup["position"] = Vector2(x,y)
-			powerup["type"] = randi() % len(POWERUP_TYPES)
+			powerup["type"] = randi() % POWERUP_TYPES.size()
 			powerup["tile"] = powerup["type"] + 2
 			print(POWERUP_TYPES[powerup["type"]], ": position = ({x}, {y})".format({"x": x, "y": y}))
 			valid_point = true
@@ -60,9 +65,9 @@ func draw_player():
 func move_player():
 	delete_tiles(PLAYER)
 	var body_copy
-	if add_life:
+	if border_eaten:
 		body_copy = player_body.slice(0, player_body.size() - 1)
-		add_life = false
+		border_eaten = false
 	else:
 		body_copy = player_body.slice(0, player_body.size() - 2)
 	var new_head = body_copy[0] + player_direction
@@ -95,6 +100,7 @@ func check_border_eaten():
 	for border in borders:
 		if border == player_body[0]:
 			indexes.push_front(counter)
+			border_eaten = true
 		counter += 1
 	for index in indexes:
 		borders.remove(index)
@@ -107,7 +113,8 @@ func check_powerup_eaten():
 
 func activate_powerup(powerup):
 	if POWERUP_TYPES[powerup["type"]] == "LIFE":
-		add_life = true
+		player_lives += 1
+		print("Current player lives: ", player_lives)
 	elif POWERUP_TYPES[powerup["type"]] in ["SPEED_UP", "SPEED_DOWN"]:
 		$PowerupTimer.stop()
 		$PowerupTimer.stop()
@@ -131,6 +138,19 @@ func teleport_player():
 			valid_point = true
 			teleport = true
 	return Vector2(x,y)
+
+
+func check_game_over():
+	var head = player_body[0]
+	for block in player_body.slice(1, player_body.size() - 1):
+		if block == head:
+			reset()
+
+func reset():
+	player_lives -= 1
+	player_body = start_player_position
+	player_direction = start_player_direction
+	if player_lives <= 0: game_over = true
 	
 
 
@@ -145,3 +165,7 @@ func _on_PlayerMovementTimer_timeout() -> void:
 
 func _on_PowerupTimer_timeout() -> void:
 	$PlayerMovementTimer.wait_time = 0.2
+
+
+func _process(delta):
+	check_game_over()
